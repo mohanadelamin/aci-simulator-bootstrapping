@@ -14,39 +14,6 @@
   until: aaa_info.status == 200
   retries: 10
   delay: 30
-- name: Add Remote Location
-  aci_rest:
-    host: "{{ inventory_hostname }}"
-    username: "{{ apic_user }}"
-    password: "{{ apic_password }}"
-    validate_certs: "{{ validate_certs}}"
-    method: post
-    path: /api/node/mo/uni/fabric/path-backup-server.json
-    content: >
-      {
-        "fileRemotePath": {
-          "attributes": {
-            "dn": "uni/fabric/path-backup-server",
-            "remotePort": "22",
-            "name": "backup-server",
-            "host": "{{ inventory_hostname }}",
-            "remotePath": "/newdisk/aci-backup",
-            "userName": "root",
-            "userPasswd": "{{ apic_password }}",
-            "rn": "path-backup-server",
-            "status": "created"
-          },
-          "children": [{
-            "fileRsARemoteHostToEpg": {
-              "attributes": {
-                "tDn": "uni/tn-mgmt/mgmtp-default/oob-default",
-                "status": "created"
-              },
-              "children": []
-            }
-          }]
-        }
-      }
 - name: Create Import Policy
   aci_rest:
     host: "{{ inventory_hostname }}"
