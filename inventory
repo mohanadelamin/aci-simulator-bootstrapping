@@ -1,0 +1,21 @@
+[apic]
+10.197.140.251
+
+[apic:vars]
+apic_cidr: 10.197.140.251/24
+apic_gw: 10.197.140.1
+apic_user: admin
+apic_password: "******"
+wait_time: 90
+
+[vcenter]
+10.197.140.102
+
+[vcenter:vars]
+vcenter_username: ansible@panlab.local
+vcenter_password: "*****"
+validate_certs=no
+vm_name: ACI-Simulator-251
+datastore: NFS_volume
+datacenter: PanLab
+cluster: CE-Lab-Single-A

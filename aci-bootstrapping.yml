@@ -1,4 +1,18 @@
 ---
-- hosts: localhost
-  roles:
-    - apic-init
+- name: Reset and APIC Simulator
+  hosts: vcenter
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Rest APIC Simulator
+      include_role:
+        name: apic-init
+
+- name: Restore APIC Configuration
+  hosts: apic
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Restart APIC configuration
+      include_role:
+        name: apic-configure
