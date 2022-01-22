@@ -80,7 +80,7 @@
           "attributes": {
             "dn": "uni/fabric/configimp-ACI-Backup-Restore",
             "name": "ACI-Backup-Restore",
-            "fileName": "{{ backup_filename }} ",
+            "fileName": "{{ backup_filename }}",
             "adminSt": "triggered",
             "rn": "configimp-ACI-Backup-Restore",
             "status": "created"
