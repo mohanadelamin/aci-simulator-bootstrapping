@@ -1,0 +1,9 @@
+---
+- name: Restore APIC Configuration
+  hosts: apic
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Restart APIC configuration
+      include_role:
+        name: apic-configure

@@ -14,12 +14,13 @@
   until: aaa_info.status == 200
   retries: 10
   delay: 30
-- name: Restore Backup
+- name: Add Remote Location
   aci_rest:
     host: "{{ inventory_hostname }}"
     username: "{{ apic_user }}"
     password: "{{ apic_password }}"
     validate_certs: "{{ validate_certs}}"
+    method: post
     path: /api/node/mo/uni/fabric/path-backup-server.json
     content: >
       {
@@ -40,6 +41,88 @@
               "attributes": {
                 "tDn": "uni/tn-mgmt/mgmtp-default/oob-default",
                 "status": "created"
+              },
+              "children": []
+            }
+          }]
+        }
+      }
+- name: Create Import Policy
+  aci_rest:
+    host: "{{ inventory_hostname }}"
+    username: "{{ apic_user }}"
+    password: "{{ apic_password }}"
+    validate_certs: "{{ validate_certs}}"
+    method: post
+    path: /api/node/mo/uni/fabric/path-backup-server.json
+    content: >
+      {
+        "fileRemotePath": {
+          "attributes": {
+            "dn": "uni/fabric/path-backup-server",
+            "remotePort": "22",
+            "name": "backup-server",
+            "host": "{{ backup_server }}",
+            "remotePath": "{{ backup_path }}",
+            "userName": "{{ backup_server_user }}",
+            "userPasswd": "{{ backup_server_password }}",
+            "rn": "path-backup-server",
+            "status": "created"
+          },
+          "children": [{
+            "fileRsARemoteHostToEpg": {
+              "attributes": {
+                "tDn": "uni/tn-mgmt/mgmtp-default/oob-default",
+                "status": "created"
+              },
+              "children": []
+            }
+          }]
+        }
+      }
+- name: Configure Encryption Key
+  aci_rest:
+    host: "{{ inventory_hostname }}"
+    username: "{{ apic_user }}"
+    password: "{{ apic_password }}"
+    validate_certs: "{{ validate_certs}}"
+    method: post
+    path: /api/node/mo/uni/exportcryptkey.json
+    content: >
+      {
+        "pkiExportEncryptionKey": {
+          "attributes": {
+            "dn": "uni/exportcryptkey",
+            "strongEncryptionEnabled": "true",
+            "passphrase": "{{ exportcryptkey }}"
+          },
+          "children": []
+        }
+      }
+- name: Restore Backup
+  aci_rest:
+    host: "{{ inventory_hostname }}"
+    username: "{{ apic_user }}"
+    password: "{{ apic_password }}"
+    validate_certs: "{{ validate_certs}}"
+    method: post
+    path: /api/node/mo/uni/fabric/configimp-ACI-Backup-Restore.json
+    content: >
+      {
+        "configImportP": {
+          "attributes": {
+            "dn": "uni/fabric/configimp-ACI-Backup-Restore",
+            "name": "ACI-Backup-Restore",
+            "fileName": "{{ backup_filename }} ",
+            "adminSt": "triggered",
+            "rn": "configimp-ACI-Backup-Restore",
+            "status": "created"
+          },
+          "children": [{
+            "configRsRemotePath": {
+              "attributes": {
+                "tnFileRemotePathName": "backup-server",
+                "status": "created,modified"
               },
               "children": []
             }

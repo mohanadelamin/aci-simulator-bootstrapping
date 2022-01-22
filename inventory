@@ -2,20 +2,27 @@
 10.197.140.251
 
 [apic:vars]
-apic_cidr: 10.197.140.251/24
-apic_gw: 10.197.140.1
-apic_user: admin
-apic_password: "******"
-wait_time: 90
+apic_cidr=10.197.140.251/24
+apic_gw=10.197.140.1
+apic_user=admin
+apic_password="******"
+wait_time=90
+validate_certs=no
+exportcryptkey="*******"
+backup_server=10.197.140.109
+backup_path=/newdisk/aci-backup
+backup_server_user=root
+backup_server_user="*******"
+backup_filename=backup.tar.gz
 
 [vcenter]
 10.197.140.102
 
 [vcenter:vars]
-vcenter_username: ansible@panlab.local
-vcenter_password: "*****"
+vcenter_username=ansible@panlab.local
+vcenter_password="*****"
 validate_certs=no
-vm_name: ACI-Simulator-251
-datastore: NFS_volume
-datacenter: PanLab
-cluster: CE-Lab-Single-A
+vm_name=ACI-Simulator-251
+datastore=NFS_volume
+datacenter=PanLab
+cluster=CE-Lab-Single-A
