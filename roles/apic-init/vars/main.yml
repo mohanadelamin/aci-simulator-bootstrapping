@@ -1,0 +1,17 @@
+---
+validate_certs: no
+
+vcenter_hostname: 10.197.140.102
+vcenter_username: ansible@panlab.local
+vsphere_password: "*****"
+
+vm_name: ACI-Simulator-251
+datastore: NFS_volume
+datacenter: PanLab
+cluster: CE-Lab-Single-A
+
+aci_mgmt: 10.197.140.251
+aci_cidr: 10.197.140.0/24
+aci_gw: 10.197.140.1
+aci_password: "******"
+wait_time: 90
