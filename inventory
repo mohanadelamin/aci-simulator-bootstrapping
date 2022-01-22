@@ -12,7 +12,7 @@ exportcryptkey="*******"
 backup_server=10.197.140.109
 backup_path=/newdisk/aci-backup
 backup_server_user=root
-backup_server_user="*******"
+backup_server_password="*******"
 backup_filename=backup.tar.gz
 
 [vcenter]
