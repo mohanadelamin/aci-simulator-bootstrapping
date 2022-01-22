@@ -1,7 +1,7 @@
 ---
 - name: Get VM info
   vmware_guest_info:
-    hostname: "{{ vcenter_hostname }}"
+    hostname: "{{ inventory_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     datacenter: "{{ datacenter }}"
@@ -10,7 +10,7 @@
   register: vm_info
 - name: Change VM power state
   vmware_guest_powerstate:
-    hostname: "{{ vcenter_hostname }}"
+    hostname: "{{ inventory_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     validate_certs: "{{ validate_certs }}"
@@ -21,14 +21,14 @@
     seconds: "{{ wait_time }}"
 - name: Configure appliance via console
   vmware_guest_sendkey:
-    hostname: "{{ vcenter_hostname }}"
+    hostname: "{{ inventory_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     validate_certs: "{{ validate_certs }}"
     moid: "{{ vm_info.instance.moid }}"
     keys_send: "{{ item.keys_send }}"
     string_send: "{{ item.string_send | default(omit) }}"
-  no_log: "{{ item.no_log }}"
+  no_log: no
   loop:
     - keys_send:
         - ENTER
@@ -42,11 +42,11 @@
         - ENTER
         - ENTER
         - ENTER
-      string_send: "{{ net_cidr }}"
+      string_send: "{{ apic_cidr }}"
       no_log: no
     - keys_send:
         - ENTER
-      string_send: "{{ net_gw }}"
+      string_send: "{{ apic_gw }}"
       no_log: no
     - keys_send:
         - ENTER
@@ -55,11 +55,11 @@
       no_log: no
     - keys_send:
         - ENTER
-      string_send: "{{ aci_password }}"
+      string_send: "{{ hostvars[groups['apic'][0]]['apic_password'] }}"
       no_log: yes
     - keys_send:
         - ENTER
-      string_send: "{{ aci_password }}"
+      string_send: "{{ hostvars[groups['apic'][0]]['apic_password'] }}"
       no_log: yes
     - keys_send:
         - ENTER
@@ -68,5 +68,3 @@
     - keys_send:
         - ENTER
       no_log: no
----
-# tasks file for apic-init

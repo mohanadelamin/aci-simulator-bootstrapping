@@ -1,0 +1,48 @@
+---
+- name: Wait for AAA service to become available
+  uri:
+    method: POST
+    url: https://{{ inventory_hostname }}/api/aaaLogin.json
+    validate_certs: "{{ validate_certs }}"
+    body_format: json
+    body: 
+      aaaUser:
+        attributes:
+          name: "{{ apic_user }}"
+          pwd: "{{ apic_password }}"
+  register: aaa_info
+  until: aaa_info.status == 200
+  retries: 10
+  delay: 30
+- name: Restore Backup
+  aci_rest:
+    host: "{{ inventory_hostname }}"
+    username: "{{ apic_user }}"
+    password: "{{ apic_password }}"
+    validate_certs: "{{ validate_certs}}"
+    path: /api/node/mo/uni/fabric/path-backup-server.json
+    content: >
+      {
+        "fileRemotePath": {
+          "attributes": {
+            "dn": "uni/fabric/path-backup-server",
+            "remotePort": "22",
+            "name": "backup-server",
+            "host": "{{ inventory_hostname }}",
+            "remotePath": "/newdisk/aci-backup",
+            "userName": "root",
+            "userPasswd": "{{ apic_password }}",
+            "rn": "path-backup-server",
+            "status": "created"
+          },
+          "children": [{
+            "fileRsARemoteHostToEpg": {
+              "attributes": {
+                "tDn": "uni/tn-mgmt/mgmtp-default/oob-default",
+                "status": "created"
+              },
+              "children": []
+            }
+          }]
+        }
+      }
